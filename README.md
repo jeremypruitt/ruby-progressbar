@@ -4,6 +4,11 @@ Ruby/ProgressBar is a text progress bar library for Ruby.
 It can indicate progress with percentage, a progress bar,
 and estimated remaining time.
 
+Ruby/DbProgressBar is an extensions of the above ProgressBar
+to write output to the database instead of to the console.
+Implemented for Sequel ORM, but can be easily extended to 
+other ORMs such as ActiveRecord or DataMapper
+
 ## Examples
 
     % irb --simple-prompt -r progressbar
@@ -18,6 +23,20 @@ and estimated remaining time.
     >> (1..100).each{|x| sleep(0.1); pbar.set(x)}; pbar.finish
     test:           67% |oooooooooooooooooooooooooo              | ETA:  00:00:03
 
+
+    >> DB = Sequel.sqlite(File.join(ROOT_DIR, 'demo.db'))
+    >> SequelOutput.prepare_database(DB)
+    >> total = 15
+    >> pbar = DbProgressBar.new("job #1", total, SequelOutput.new(1, DB))
+    >> total.times do
+    >>   pbar.inc
+    >>   sleep(1)
+    >> end
+    >> pbar.finish
+
+    >> puts DB[:progress_bars].filter(:unique_id => 1).first[:progress_text]
+    job #1:       100% |oooooooooooooooooooooooooooooooooooooooo| Time: 00:00:15
+	
 ## API
 
 - `ProgressBar#new(title, total, out = STDERR)`

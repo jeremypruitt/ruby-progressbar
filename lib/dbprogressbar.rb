@@ -8,7 +8,7 @@
 # You can redistribute it and/or modify it under the terms
 # of Ruby's license.
 #
-require 'lib/progressbar'
+require 'progressbar'
 
 class DbProgressBar < ProgressBar
 
